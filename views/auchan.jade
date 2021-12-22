@@ -1,0 +1,59 @@
+extends layout
+
+block content
+    .form-group
+        input.form-control(name="url",placeholder="Url da página da auchan")
+        button.btn.btn-success Obter
+    .app#scraper
+        table.table(v-if="product == true")
+            thead
+                th Imagem
+                th Código
+                th Nome
+                th Marca
+                th Categorias
+                th Categoria Principal
+            tbody
+                //TODO possibly have a hidden input in each to save to server then
+                tr
+                    td(id="product_preview",:value="product_preview")
+                        img(height="70px",:src="product_preview")
+                    td(id="code",:value="code" @dblclick="editCell") {{ code }}
+                    td(id="name",:value="name" @dblclick="editCell") {{ name }}
+                    td(id="brand",:value="brand" @dblclick="editCell") {{ brand }}
+                    td(id="categorias",:value="categorias" @dblclick="editCell") {{ categorias }}
+                    td(id="categoria_principal",:value="categoria_principal" @dblclick="editCell") {{ categoria_principal }}
+                    td
+                        button.btn.btn-success(@click="saveProduct") adicionar
+                tr
+                    th Descrição
+                    td(colspan="5") {{ description }}
+                tr
+                    th Ingredientes/Composição
+                    td(colspan="5") {{ ingredients }}
+                tr
+                    th Informação Nutricional
+                    td(colspan="5") {{ nutritional_info }}
+            tbody(id="v-for-object")
+                tr(v-for="nutrient in nutrients")
+                    td(v-if="nutrient!=null" colspan="5") {{ nutrient.text }}
+        .externalSourceNutrients(id="v-for-object")
+            #externalSourceAccordion.accordion
+                .accordion-item(v-if="externalSource.length>0" v-for="(externalSource, word) in externalSources")
+                    h2.accordion-header(:id="'heading'+word")
+                        button.accordion-button(type='button' data-bs-toggle='collapse',:data-bs-target='"#"+word' aria-expanded='true',:aria-controls='word')
+                            | {{ word }}
+                    .accordion-collapse.collapse(:id="word",:aria-labelledby='"heading"+word' data-bs-parent='#externalSourceAccordion')
+                        .accordion-body
+                            table.table
+                                thead
+                                    tr(id="v-for-object")
+                                        th
+                                        th(v-for="(attr,prop) in externalSource[0]") {{ prop }}
+                                tbody(v-for="product in externalSource")
+                                    tr(id="v-for-object")
+                                        th
+                                            button.btn.btn-success Associar
+                                        td(v-for="attr in product") {{attr}}
+    //TODO not implemented don't have fruit content
+    script(src="https://cdn.jsdelivr.net/npm/nutri-score/nutriScore.js")

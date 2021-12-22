@@ -1,0 +1,79 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  .app#app
+    .lookupCode
+      form(:action="action")
+        input(type="text" placeholder="EAN Code" v-model="code")
+        input(type="submit" value="search code")
+    v-select( @search="fetchProduct" placeholder="Search product" label="name",:options="options" @input="openProductPage")
+      template(slot="option" slot-scope="option")
+        .row
+          .col-md-4
+            img(height="50px",:src='option.product_preview')
+          .col-md-8
+            p {{option.brands}} - {{option.name}}
+  .controls
+    fieldset.input-group
+      input(type='file' accept='image/*' capture='camera')
+      button#rerun Rerun
+    fieldset.reader-config-group
+      label
+        span Barcode-Type
+        select(name='decoder_readers')
+          option(value='code_128' ) Code 128
+          option(value='code_39') Code 39
+          option(value='code_39_vin') Code 39 VIN
+          option(value='ean' selected='selected') EAN
+          option(value='ean_extended') EAN-extended
+          option(value='ean_8') EAN-8
+          option(value='upc') UPC
+          option(value='upc_e') UPC-E
+          option(value='codabar') Codabar
+          option(value='i2of5') Interleaved 2 of 5
+          option(value='2of5') Standard 2 of 5
+          option(value='code_93') Code 93
+      label
+        span Resolution (long side)
+        select#inputSize(name='input-stream_size')
+          option(value='320') 320px
+          option(value='640') 640px
+          option(selected='selected' value='800') 800px
+          option(value='1280') 1280px
+          option(value='1600') 1600px
+          option(value='1920') 1920px
+      label
+        span Patch-Size
+        select#patchSize(name='locator_patch-size')
+          option(value='x-small') x-small
+          option(value='small') small
+          option(value='medium') medium
+          option(selected='selected' value='large') large
+          option(value='x-large') x-large
+      label
+        span Half-Sample
+        input(type='checkbox' name='locator_half-sample' checked='checked')
+      label
+        span Single Channel
+        input(type='checkbox' name='input-stream_single-channel')
+      label
+        span Workers
+        select(name='numOfWorkers')
+          option(value='0') 0
+          option(selected='selected' value='1') 1
+    #result_strip
+      ul.thumbnails
+    #interactive.viewport
+    #debug.detection
+
+  br
+  br
+  br
+  p Click to scanbarcode
+  .btn.btn-secondary()
+    img(height="200px" src="/images/barcode.png")
+
+
+

@@ -1,0 +1,34 @@
+extends layout
+
+block content
+    if data.length==0
+        .alert.alert-danger
+            p No product found in database.
+        .alert.alert-success Returning!!
+        script.
+            setTimeout(function(){history.back();},2000)
+    else
+        table.table
+            thead
+                tr
+                    each colname in Object.keys(data[0].dataValues)
+                        th=colname
+            tbody
+                each row in data
+                    tr
+                        each colname in Object.keys(data[0].dataValues)
+                            case colname
+                                when "product_preview"
+                                    td
+                                        if row.dataValues[colname].length>0
+                                            img(width="50px", height="50px" src=row.dataValues[colname])
+                                when "ingredients_preivew"
+                                    td
+                                        if row.dataValues[colname].length>0
+                                            img(width="50px", height="50px" src=row.dataValues[colname])
+                                when "nutrition_preview"
+                                    td
+                                        if row.dataValues[colname].length>0
+                                            img(width="50px", height="50px" src=row.dataValues[colname])
+                                default
+                                    td=row.dataValues[colname]
